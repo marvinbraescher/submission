@@ -3,11 +3,10 @@ package submissoes ;
 
 import java.util.Date ;
 
-import util.Situacao ;
 
 public class Curso extends Submissao {
 	
-	public Curso( String titulo , Date data , int total , Situacao situacao )
+	public Curso( String titulo , Date data , int total )
 	{
 		super( titulo, data ) ;
 		// TODO Auto-generated constructor stub
@@ -21,8 +20,9 @@ public class Curso extends Submissao {
 	
 	private Double duracao ;
 	
+	
 	public String getJustificativa()
-	{
+	{ 
 		return justificativa ;
 	}
 	

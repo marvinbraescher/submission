@@ -3,8 +3,6 @@ package submissoes ;
 
 import java.util.Date ;
 
-import util.Situacao ;
-
 public class Artigo extends Submissao {
 	
 	public Artigo( String titulo , Date data   )

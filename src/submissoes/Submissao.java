@@ -6,7 +6,7 @@ import util.Situacao;
 import util.Validator;
 import pessoas.Autor;
 
-public abstract class Submissao implements Validator {
+ public abstract class Submissao implements Validator {
 
 	private String titulo;
 	private Date data;
