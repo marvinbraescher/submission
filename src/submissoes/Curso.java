@@ -2,15 +2,14 @@
 package submissoes ;
 
 import java.util.Date ;
+import java.util.Set ;
+
+import pessoas.Autor ;
 
 
 public class Curso extends Submissao {
 	
-	public Curso( String titulo , Date data , int total )
-	{
-		super( titulo, data ) ;
-		// TODO Auto-generated constructor stub
-	}
+
 	
 	private String justificativa ;
 	
@@ -20,6 +19,16 @@ public class Curso extends Submissao {
 	
 	private Double duracao ;
 	
+	public Curso( String titulo , Date data ,String justificativa, String material, String objetivo, Double duracao, Set<Autor> autores )
+	{
+		super( titulo, data , autores ) ;
+		
+		this.duracao = duracao;
+		this.objetivo = objetivo;
+		this.material = material;
+		this.justificativa = justificativa;
+
+	}
 	
 	public String getJustificativa()
 	{ 

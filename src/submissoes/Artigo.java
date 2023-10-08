@@ -2,21 +2,26 @@
 package submissoes ;
 
 import java.util.Date ;
+import java.util.Set ;
+
+import pessoas.Autor ;
 
 public class Artigo extends Submissao {
-	
-	public Artigo( String titulo , Date data   )
-	{
-		super( titulo, data ) ;
-		// TODO Auto-generated constructor stub
-
-	}
 	
 	private String abstracts ;
 	
 	private String resumo ;
 	
 	private String arquivo ;
+	
+	public Artigo( String titulo , Date data , String abstracts , String resumo , String arquivo, Set<Autor> autores )
+	{
+		super( titulo, data, autores ) ;
+		
+		this.abstracts = abstracts ;
+		this.resumo = resumo ;
+		this.arquivo = arquivo ;
+	}
 	
 	public String getAbstracts()
 	{
@@ -53,6 +58,5 @@ public class Artigo extends Submissao {
 	{
 		this.arquivo = arquivo ;
 	}
-	
 	
 }

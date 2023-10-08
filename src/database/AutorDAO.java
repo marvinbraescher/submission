@@ -1,11 +1,15 @@
 package database;
 
 import java.sql.Connection ;
-import java.sql.DriverManager ;
 import java.sql.PreparedStatement ;
 import java.sql.ResultSet ;
 import java.sql.SQLException ;
 import java.sql.Statement ;
+import java.util.Set ;
+import java.util.TreeSet ;
+
+import contatos.Telefone ;
+import pessoas.Autor ;
 
 
 
@@ -15,7 +19,7 @@ public class AutorDAO
 	public void setAutor( String nome, String email ) throws SQLException 
 	{
 		Connection connection = new ConnectionFactory().getConnection();
-		if( connection!=null ) 
+		if( connection != null ) 
 		{			
 			PreparedStatement query;
 			System.out.println("Conexão aberta!");
@@ -34,20 +38,22 @@ public class AutorDAO
 		connection.close();
 	}
 	
-	public String getAutores() throws SQLException 
+	public Set<Autor> getAutores() throws SQLException 
 	{
 		Connection connection = new ConnectionFactory().getConnection();
 		ResultSet rs = null;
-		String autores = "";
+		Set< Autor > autores = new TreeSet < Autor >();
 		if( connection != null ) 
 		{			
 			System.out.println("Conexão aberta!");
 			String sql = "SELECT * from autor";
 			Statement stmt = connection.createStatement();
 			rs = stmt.executeQuery(sql);			
+
 			while( rs.next() ) 
-			{  
-				autores += "Nome: " + rs.getString( "nome" ) + "\n Email: " + rs.getString( "email" ) + "\n--------------------------\n"  ;
+			{  	
+				Autor autor = new Autor( rs.getString( "nome" ), rs.getString( "email" ) , new Telefone(51, 512423123) );
+				autores.add( autor );
 			}
 		}
 		else 
@@ -57,16 +63,15 @@ public class AutorDAO
 		
 		connection.close();
 	
-	
 		return autores;
 	}
 	
 	
-	public String getAutorByName( String name ) throws SQLException 
+	public Autor getAutorByName( String name ) throws SQLException 
 	{
 		Connection connection = new ConnectionFactory().getConnection();
 		PreparedStatement query;
-		String autor = "";
+		Autor autor = null; 
 		if( connection != null ) 
 		{			
 			System.out.println("Conexão aberta!");
@@ -76,7 +81,7 @@ public class AutorDAO
 			ResultSet rs = 	query.executeQuery();
 			while( rs.next() ) 
 			{
-				autor += "Nome: " + rs.getString( "nome" ) + "\nEmail: " +rs.getString( "email" );
+				 autor = new Autor( rs.getString( "nome" ), rs.getString( "email" ) , new Telefone(51, 512423123) );
 			}
 		}
 		else 
@@ -85,8 +90,7 @@ public class AutorDAO
 		}
 		
 		connection.close();
-	
-	
+
 		return autor;
 	}
 			

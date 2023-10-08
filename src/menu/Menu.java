@@ -1,93 +1,266 @@
 
 package menu ;
 
-import java.sql.Connection ;
+
 import java.sql.SQLException ;
+import java.util.ArrayList ;
 import java.util.Date ;
+import java.util.List ;
+import java.util.Set ;
+import java.util.TreeSet ;
 
 import javax.swing.JOptionPane ;
 
 import database.AutorDAO ;
-import database.ConnectionFactory ;
+
 import pessoas.Autor ;
-import submissoes.Submissao ;
+import submissoes.Artigo ;
+import submissoes.Curso ;
+
 
 public class Menu {
 	
 	public static void main( String[] args ) throws SQLException
 	{
-		Boolean exit = false;
-		AutorDAO autor = new AutorDAO();
+		Boolean exit = false ;
+		AutorDAO autor = new AutorDAO() ;
+		List<Curso> cursos = new ArrayList<>();
+		List<Artigo> artigos = new ArrayList<>();
 		
 		while ( !exit )
 		{
 			switch ( montaMenu() )
 			{
-				case 1 : 
-				{
-					Date time = new Date();
+				case 1 : {
+					Date time = new Date() ;
+
+					// JOptionPane.showMessageDialog( null , time ) ;
+					String[] choices = {"Artigo","Curso"} ;
+					String input = ( String ) JOptionPane.showInputDialog( 
+							null ,
+							"O que deseja submeter?" 
+							, "Escolha" 
+							,
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							choices,
+							choices[0] ) ;
 					
-					JOptionPane.showMessageDialog( null , time ) ;
-					
-					Connection connection = new ConnectionFactory().getConnection();
-					
-					if( connection!=null )
+					if( isArtigo( input ) ) 
 					{
-						System.out.println("Conexão aberta!");
+						String titulo = JOptionPane.showInputDialog( "Titulo do artigo: " ) ;
+						String abstracts = JOptionPane.showInputDialog( "Abstracts do artigo: " ) ;
+						String resumo = JOptionPane.showInputDialog( "Resumo do artigo: " ) ;
+						String arquivo = JOptionPane.showInputDialog( "Arquivo do artigo: " ) ;
+						Boolean multipleAutors = true;
+						Set<Autor> autores1 = new TreeSet<Autor>();
+						while( multipleAutors ) 
+						{
+							
+							Set<Autor> autores = autor.getAutores();
+							List<String> nomesAutores = new ArrayList<>();
+							
+							for (Autor autor2 : autores) 
+							{
+								nomesAutores.add(autor2.getNome());
+							}
+							
+							String[] choice = nomesAutores.toArray( new String[0] );
+							
+							String autorChoice = (String) JOptionPane.showInputDialog(
+									null,
+									"Qual autor deseja submeter?",
+									"Qual autor deseja submeter?",
+									JOptionPane.OK_OPTION,
+									null,
+									choice,
+									choice[0]
+									);
+												
+							Autor autorByName = autor.getAutorByName( autorChoice ) ;
+							autores1.add( autorByName );
+							if ( JOptionPane.showConfirmDialog(
+									null,
+									"Deseja adicionar mais autores?", "WARNING",
+							        JOptionPane.YES_NO_OPTION
+							        ) == JOptionPane.YES_OPTION) 
+							{
+								multipleAutors = true;
+							} 
+							else 
+							{
+								if ( JOptionPane.showConfirmDialog(
+										null,
+										"Deseja cadastrar mais autores?", "WARNING",
+								        JOptionPane.YES_NO_OPTION
+								        ) == JOptionPane.YES_OPTION) 
+								{
+									String nome = JOptionPane.showInputDialog( "Nome autor: " ) ;
+									String email = JOptionPane.showInputDialog( "Email autor: " ) ;
+									autor.setAutor( nome , email ) ;
+								} 
+								else 
+								{
+									multipleAutors= false;
+								}
+								
+							}
+						}
+						//Autor autorByName = autor.getAutorByName( autorChoice ) ;
+						Artigo artigo = new Artigo(titulo, time, abstracts, resumo, arquivo, autores1  );
+						artigo.setTotal( artigo.getTotal() + 1 );
+						artigos.add( artigo );
+						
+					}
+					else 
+					{
+						String titulo = JOptionPane.showInputDialog( "Titulo do curso: " ) ;
+						String justificativa = JOptionPane.showInputDialog( "Justificativa do curso: " ) ;
+						String material = JOptionPane.showInputDialog( "Material do curso: " ) ;
+						String objetivo = JOptionPane.showInputDialog( "Objetivo do curso: " ) ;
+						
+						Double duracao = Double.valueOf(   JOptionPane.showInputDialog( "Duracao do curso (Double): " ) ) ;
+						Boolean multipleAutors = true;
+						Set<Autor> autores1 = new TreeSet<Autor>();
+						while( multipleAutors ) 
+						{
+							Set<Autor> autores = autor.getAutores();
+							List<String> nomesAutores = new ArrayList<>();
+							
+							for (Autor autor2 : autores) {
+								nomesAutores.add(autor2.getNome());
+							}
+							
+							String[] choice = nomesAutores.toArray( new String[0] );
+							
+							String autorChoice = (String) JOptionPane.showInputDialog(
+									null,
+									"Qual autor deseja submeter?",
+									"Qual autor deseja submeter?",
+									JOptionPane.OK_OPTION,
+									null,
+									choice,
+									choice[0]
+									);
+												
+							Autor autorByName = autor.getAutorByName( autorChoice ) ;
+							autores1.add( autorByName );
+							if (JOptionPane.showConfirmDialog(null, "Deseja adicionar mais autores?", "WARNING",
+							        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+								multipleAutors = true;
+							}
+							else 
+							{
+								if ( JOptionPane.showConfirmDialog(
+										null,
+										"Deseja cadastrar mais autores?", "WARNING",
+								        JOptionPane.YES_NO_OPTION
+								        ) == JOptionPane.YES_OPTION) 
+								{
+									String nome = JOptionPane.showInputDialog( "Nome autor: " ) ;
+									String email = JOptionPane.showInputDialog( "Email autor: " ) ;
+									autor.setAutor( nome , email ) ;
+								} 
+								else 
+								{
+									multipleAutors= false;
+								}
+								
+							}
+						
+						}
+						
+						Curso curso = new Curso( titulo, time , justificativa, material, objetivo, duracao, autores1 );
+						curso.setTotal( curso.getTotal() + 1 );
+						cursos.add(curso);
 
 					}
-					else
-					{		
-						System.out.println("Conexão com exceção!");
-
-					}
-					connection.close();
+					
 					break;
 				}
-				case 2 : 
-				{
+				case 2 : {
 					JOptionPane.showMessageDialog( null , OpcoesMenu.PESQ_SUB.getDescricao() ) ;
-					break;
+					break ;
 				}
-				case 3 : 
-				{
+				case 3 : {
+					String nome = JOptionPane.showInputDialog( "Nome autor: " ) ;
+					String email = JOptionPane.showInputDialog( "Email autor: " ) ;
+					autor.setAutor( nome , email ) ;
+					break ;
+				}
+				case 4 : {
+					Set<Autor> autores = autor.getAutores();
+					List<String> nomesAutores = new ArrayList<>();
+					
+					for (Autor autor2 : autores) {
+						nomesAutores.add(autor2.getNome());
+					}
+					
+					String[] choice = nomesAutores.toArray( new String[0] );
+					
+					String autorChoice = (String) JOptionPane.showInputDialog(
+							null,
+							"Qual autor deseja procurar",
+							"Qual autor deseja procurar?",
+							JOptionPane.OK_OPTION,
+							null,
+							choice,
+							choice[0]
+							);
+										
+					Autor autorByName = autor.getAutorByName( autorChoice ) ;
+					JOptionPane.showMessageDialog( null , autorByName.toString() ) ;
 
-					String nome = JOptionPane.showInputDialog( "Nome autor: " );
-					String email = JOptionPane.showInputDialog( "Email autor: " );
 					
-					autor.setAutor( nome , email );
-					JOptionPane.showMessageDialog( null , "op3" ) ;
-					break;
+					break ;
 				}
-				case 4 : 
-				{
-					String nome = JOptionPane.showInputDialog( "Pesquisar por nome do autor: " );
+				case 5 : {
+					String aux = "";
+					String autores = "";
+					for ( Artigo artigo : artigos )
+					{
+						for( Autor autores1 : artigo.getAllAutor() ) 
+						{
+							autores += "\nNome: " + autores1.getNome() + "\nEmail: " + autores1.getEmail() + "\nTelefone: " + autores1.getTelefone() ;
+						}
+						aux += "Titulo: " + artigo.getTitulo() + "\nAbstracts: " + artigo.getAbstracts() + "\nResumo: " + artigo.getResumo() + "\nData: " + artigo.getData() + "\nAutor(es): " + autores + "\n\n";
+						
+					}
+					for ( Curso curso : cursos )
+					{
+						for( Autor autores1 : curso.getAllAutor() ) 
+						{
+							autores += "\nNome: " + autores1.getNome() + "\nEmail: " + autores1.getEmail() + "\nTelefone: " + autores1.getTelefone();
+						}
+						aux += "Titulo: " + curso.getTitulo() +"\nMaterial: " + curso.getMaterial() + "\nObjetivo: " + curso.getObjetivo() + "\nJustificativa: " + curso.getJustificativa() + "\nDuracao: " + curso.getDuracao() + "Data: "  +  curso.getData() + "\n Autor(es): " + autores + "\n\n";
+					}
+					if( aux.equals( "" ) ) 
+					{
+						aux = "Não há Artigo/Curso(s) cadastrado(s)";
+					}
+					JOptionPane.showMessageDialog( null , aux ) ;
+					break ;
+				}
+				case 6 : {
+					Set<Autor> autores = autor.getAutores();
+					String aux = "";
 					
-					
-					JOptionPane.showMessageDialog( null , autor.getAutorByName( nome ) ) ;
-					break;
+					for ( Autor autor2 : autores )
+					{
+						aux += "Nome: " + autor2.getNome() + "\nEmail: " + autor2.getEmail() + "\nTelefone: " + autor2.getTelefone() + "\n\n";
+					}
+					JOptionPane.showMessageDialog( null , aux ) ;
+					break ;
 				}
-				case 5 : 
-				{
-					JOptionPane.showMessageDialog( null , "op5" ) ;
-					break;
-				}
-				case 6 : 
-				{
-					JOptionPane.showMessageDialog( null , autor.getAutores() ) ;
-					break;
-				}
-				case 7 : 
-				{
-					JOptionPane.showMessageDialog( null , "SAIU" ) ;
-					exit = true;
-					break;
+				case 7 : {
+					JOptionPane.showMessageDialog( null , "Obrigado, volte sempre!" ) ;
+					exit = true ;
+					break ;
 				}
 				default :
 					throw new IllegalArgumentException( "Unexpected value: " + montaMenu() ) ;
 			}
 		}
-	
 	}
 	
 	private static int montaMenu()
@@ -99,5 +272,21 @@ public class Menu {
 		}
 		return Integer.parseInt( JOptionPane.showInputDialog( str ) ) ;
 	}
+	
+	/**
+	 * Recebe uma String do JOptionPane e devolve um boleano
+	 * @param String choice
+	 * @return true or false
+	 */
+	public static Boolean isArtigo( String choice ) 
+	{
+		Boolean isArtigo = false;
+		if( choice.equals( "Artigo" ) ) 
+		{
+			isArtigo = true;
+		}
+		return isArtigo;
+	}
+
 	
 }

@@ -10,17 +10,19 @@ import pessoas.Autor;
 
 	private String titulo;
 	private Date data;
-	private static int total;
+	private static int total = 0;
 	
 	public Situacao situacao;
 	 
 	//add, remove and contains. Main commands <--
-	private Set<Autor> autor = new TreeSet<>();
+	private Set<Autor> autores = new TreeSet<>();
 	
-	public Submissao( String titulo, Date data ) 
+	public Submissao( String titulo, Date data , Set<Autor> autores ) 
 	{
 		this.titulo = titulo;
 		this.data = data;
+		this.situacao = Situacao.ENVIADA;
+		this.autores = autores;
 	}
 	
 				
@@ -57,7 +59,7 @@ import pessoas.Autor;
 	@Override
 	public String toString() {
 		return "Submissao [titulo=" + titulo + ", data=" + data + ", total=" + total + ", situacao=" + situacao
-				+ ", autor=" + autor + "]";
+				+ ", autor=" + getAutores() +  "]";
 	}
 
 	@Override
@@ -67,12 +69,23 @@ import pessoas.Autor;
 		return false;
 	}
 
-	public Set<Autor> getAutor() {
-		return autor;
+	public String getAutores() {
+		String str = "";
+		for ( Autor autor : autores )
+		{
+			str += "Nome: " + autor.getNome() + "\nEmail: " + autor.getEmail() + "\nTelefone: " + autor.getTelefone() +"\n\n";
+		}
+		
+		return str;
+	}
+	
+	public Set<Autor> getAllAutor()
+	{
+		return this.autores;
 	}
 
-	public void setAutor(Set<Autor> autor) {
-		this.autor = autor;
+	public void setAutor( Autor autor ) {
+		autores.add( autor );
 	}
 	
 	

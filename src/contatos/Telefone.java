@@ -7,6 +7,13 @@ public class Telefone {
 	
 	private long numero ;
 	
+	public Telefone( int ddd , long numero )
+	{
+		super() ;
+		this.ddd = ddd ;
+		this.numero = numero ;
+	}
+
 	public String toString()
 	{
 		return "(" + ddd + ")" + numero ;
