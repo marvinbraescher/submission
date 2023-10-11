@@ -1,5 +1,9 @@
 package submissoes;
 
+import java.text.ParseException ;
+import java.text.SimpleDateFormat ;
+import java.time.LocalDateTime ;
+import java.time.format.DateTimeFormatter ;
 import java.util.*;
 
 import util.Situacao;
@@ -88,5 +92,41 @@ import pessoas.Autor;
 		autores.add( autor );
 	}
 	
+	   public static String formatarData(String dataString) {
+	        // Formato de entrada
+	        DateTimeFormatter formatoEntrada = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+
+	        // Formato de saída
+	        DateTimeFormatter formatoSaida = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+	        try {
+	            // Convertendo a string de entrada para LocalDateTime
+	            LocalDateTime data = LocalDateTime.parse(dataString, formatoEntrada);
+
+	            // Formatando a data conforme o formato de saída
+	            return data.format(formatoSaida);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return null; // Ou você pode lançar uma exceção aqui, dependendo do seu caso de uso.
+	        }
 	
+	   }
+	   public static String convertData(String dataString) {
+	        // Formato de entrada
+	        SimpleDateFormat formatoEntrada = new SimpleDateFormat("dd/MM/yyyy");
+
+	        // Formato de saída
+	        SimpleDateFormat formatoSaida = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+
+	        try {
+	            // Convertendo a string de entrada para um objeto Date
+	            Date data = formatoEntrada.parse(dataString);
+
+	            // Formatando a data conforme o formato de saída
+	            return formatoSaida.format(data);
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	            return null; // Ou você pode lançar uma exceção aqui, dependendo do seu caso de uso.
+	        }
+	    }
 }
